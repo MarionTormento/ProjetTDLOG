@@ -26,12 +26,13 @@ class InterfaceGraphique(QtGui.QWidget):
 		self.show()
 	
 	def preparer(self):
-		francais=QtGui.QInputDialog.getText(self,"Préparation","Mot français:")#on rentre le mot français
-		anglais=QtGui.QInputDialog.getText(self,"Préparation","Mot anglais:")#on rentre la traduction
-		self.liste_francais.append(francais)#mise en mémoire
-		self.liste_anglais.append(anglais)#mise en mémoire
-		print(self.liste_francais)#affiche (mot,True)
-		print(self.liste_anglais)#affiche (mot, True)
+		francais, ok1=QtGui.QInputDialog.getText(self,"Préparation","Mot français:")#on rentre le mot français
+		anglais, ok2=QtGui.QInputDialog.getText(self,"Préparation","Mot anglais:")#on rentre la traduction
+		if ok1 and ok2:
+			self.liste_francais.append(francais)#mise en mémoire
+			self.liste_anglais.append(anglais)#mise en mémoire
+			print(self.liste_francais)#affiche (mot)
+			print(self.liste_anglais)#affiche (mot)
 
 	def evaluer(self):
 		dialogue=QtGui.QInputDialog.getText(self,"Evaluation","Mot français:")
@@ -43,4 +44,3 @@ def main():
 
 if __name__=='__main__':
 	main()
-
