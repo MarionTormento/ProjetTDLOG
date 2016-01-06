@@ -38,7 +38,8 @@ class Preparation(QtGui.QWidget):
 		self.english.append(eng)
 		print(self.french)
 		print(self.english)
-		self.close()
+		self.line1.clear()
+		self.line2.clear()
 
 	def fermer(self):
 		self.close
