@@ -15,13 +15,15 @@ import random
 class fch_interro():
 	def __init__(self):
 		self.nb_words = 0
-		self.name = "test.txt"
+		self.name = ""
+		self.nametxt = ""
 		self.tableau = []
-		self.fiche = self.create_file()
+#		self.fiche = self.create_file()
 
 	def create_file(self): #crée un fichier .txt qui restera en mémoire à terme
-		# self.name = ask for name + .txt
-		self.fiche = open(self.name, "w")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
+		self.nametxt = self.name + ".txt"
+		print(self.name)
+		self.fiche = open(self.nametxt, "w")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
 
 	def collect_data(self, word_lg1, word_lg2): #remplit le fichier la première fois
 		definition = word_lg1 + ":" + word_lg2 + '\n'
@@ -54,14 +56,13 @@ class fch_interro():
 #		for i in range(self.nb_words):
 #			idx_rdm = random.choice(vocab)
 
-f = fch_interro()
-f.collect_data("bonjour", "hello")
-f.collect_data("bonjour2", "hello2")
-f.collect_data("bonjour3", "hello3")
-f.collect_data("bonjour4", "hello4")
-f.file_to_tableau()
-for i in range(2*f.nb_words):
-	print(f.tableau[i])
+#f.collect_data("bonjour", "hello")
+#f.collect_data("bonjour2", "hello2")
+#f.collect_data("bonjour3", "hello3")
+#f.collect_data("bonjour4", "hello4")
+#f.file_to_tableau()
+#for i in range(2*f.nb_words):
+#	print(f.tableau[i])
 
 
 
