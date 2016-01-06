@@ -9,6 +9,7 @@ class Preparation(QtGui.QWidget):
 
 	def __init__(self, fch_interro):
 		super(Preparation,self).__init__()
+		'''Lie la préparation à une fiche déjà créée et nommée'''
 		self.f = fch_interro
 		self.setWindowTitle("Preparation de la fiche " + fch_interro.name)
 		'''Champs pour rentrer les mots'''
@@ -33,24 +34,24 @@ class Preparation(QtGui.QWidget):
 		'''Récupération des valeurs'''
 		word_lg1 = self.line1.text()
 		word_lg2 = self.line2.text()
-		print(word_lg1, word_lg2)
-		print(self.f.nametxt)
 		self.f.collect_data(word_lg1, word_lg2)
+		self.line1.clear()
+		self.line2.clear()
 
 	def fermer(self):
 		self.close
 
-
-class window_name(QtGui.QWidget):
+''' Crée la fiche et la nomme '''
+class create_fiche(QtGui.QWidget):
 
 	def __init__(self, fch_interro):
-		super(window_name, self).__init__()
+		super(create_fiche, self).__init__()
 		self.open = True
 		self.f = fch_interro()
 		self.setWindowTitle("Nommer votre fiche de révsion")
-		'''Champs pour rentrer les mots'''
+		'''Champs pour rentrer le nom'''
 		self.line_name=QtGui.QLineEdit(self)
-		'''Bouton pour donner un nom'''
+		'''Enregistrer le nom'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.ok_name)
 		'''On place le tout dans la fenêtre'''
@@ -63,13 +64,10 @@ class window_name(QtGui.QWidget):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
 		self.f.create_file()
-		self.close()		
+		self.close()
+		'''Lancement de la préparation'''		
 		self.prepa_fiche = Preparation(self.f)
-		self.prepa_fiche.show()
-
-	def next_wd(self):
-		self.open = False
-					
+		self.prepa_fiche.show()			
 
 
 class InterfaceGraphique(QtGui.QMainWindow):
@@ -89,18 +87,14 @@ class InterfaceGraphique(QtGui.QMainWindow):
 
 	
 	def nommer_fichier(self):
-		'''On fait appel à la classe préparation'''
-		self.fiche = window_name(fch_interro)
+		'''On fait appel à la classe create_fiche pour créer la fiche'''
+		self.fiche = create_fiche(fch_interro)
 		self.fiche.show()
-#		print(self.fiche.open)
-#		if self.fiche.open == False:
-#			self.prepa = Preparation(self.fiche.f)
-#			self.prepa.show()
-
 
 	def evaluer(self):
 		self.prepa=Preparation()
 		self.prepa.show()
+
 
 def main():
 	app=QtGui.QApplication(sys.argv)

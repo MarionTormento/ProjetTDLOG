@@ -22,16 +22,15 @@ class fch_interro():
 
 	def create_file(self): #crée un fichier .txt qui restera en mémoire à terme
 		self.nametxt = self.name + ".txt"
-		print(self.name)
 		self.fiche = open(self.nametxt, "w")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
 
 	def collect_data(self, word_lg1, word_lg2): #remplit le fichier la première fois
 		definition = word_lg1 + ":" + word_lg2 + '\n'
-		self.fiche = open(self.name, "a")
+		self.fiche = open(self.nametxt, "a")
 		self.fiche.write(definition)
 
 	def read_file(self): #collecte ligne par ligne une premère fois
-		with open(self.name, "r") as data:
+		with open(self.nametxt, "r") as data:
 			for line in data:
 				self.tableau.append(line)
 				self.nb_words += 1
