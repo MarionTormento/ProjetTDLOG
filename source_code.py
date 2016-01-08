@@ -1,12 +1,8 @@
-# Trier deux fichiers pour n'en faire plus qu'un
-# Interoger au hasard 
-# créer un fichier directement dès que les gens dépose leurs informations 
-# anna faut pusher systmatiquement et t'assurer que c'est bien passé !
-# choix de la langue d'interrogation
-# importation modulaire du code dans interface
-# distance de Levenshtein
-# créer une fonction choix du nom dans l'interface
 
+# créer un fichier directement dès que les gens dépose leurs informations 
+# choix de la langue d'interrogation
+# distance de Levenshtein
+# ATTENTION PROBLEME DANS READ FILE il ne voit pas la denière ligne
 
 import random
 
@@ -18,25 +14,24 @@ class fch_interro():
 		self.name = ""
 		self.nametxt = ""
 		self.tableau = []
-#		self.fiche = self.create_file()
+		self.fiche = self.create_file()
 
 	def create_file(self): #crée un fichier .txt qui restera en mémoire à terme
 		self.nametxt = self.name + ".txt"
 		self.fiche = open(self.nametxt, "w")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
+		self.fiche.close()
 
 	def collect_data(self, word_lg1, word_lg2): #remplit le fichier la première fois
 		definition = word_lg1 + ":" + word_lg2 + '\n'
 		self.fiche = open(self.nametxt, "a")
 		self.fiche.write(definition)
+		self.nb_words += 1
+		self.fiche.close()
 
-	def read_file(self): #collecte ligne par ligne une premère fois
-		with open(self.nametxt, "r") as data:
-			for line in data:
-				self.tableau.append(line)
-				self.nb_words += 1
-		for i in range(f.nb_words):
-			print(self.tableau[i])
-
+	def read_file(self): #collecte ligne par ligne une première fois
+		data = open(self.nametxt, "r")
+		self.tableau = data.readlines()
+		data.close()
 
 	def file_to_tableau(self): #convertit le fichier texte en un tableau ou on trouve en indice par les mots langue 1 et en pair les mots langue 2
 		self.read_file()
@@ -47,21 +42,34 @@ class fch_interro():
 			self.tableau[i] = word_lg1 
 			self.tableau.append(word_lg2) #(prend la position nb_words+i)
 
-	#def choose_lg(self): #renvoi 1 si premier langage, 2 si deuxième
+	#def choose_lg(self): #renvoi 0 si premier langage, 1 sinon
 
-#	def interrogate(self):
-#		idx_language = self.choose_lg()
-#		vocab = [i for i in range(self.nb_words)]
-#		for i in range(self.nb_words):
-#			idx_rdm = random.choice(vocab)
+	def interrogate(self):
+		'''On suppose qu'on peut être intérrogé dans n'importe quel sens'''
+		couple_interro = [i for i in range(self.nb_words)]
+		choix_langue = [0, 1]
+		for i in range(self.nb_words):
+			idx_rdm = random.choice(couple_interro) #on choisit le couple de mot
+			idx_language = random.choice(choix_langue) #on choisit le sens de l'intero
+			to_guess = self.tableau[idx_rdm + idx_language*self.nb_words]
+			answer = self.tableau[idx_rdm + (1 - idx_language)*self.nb_words]
+			print(to_guess, " ", answer)
+			# processus d'interogation levenstein
+			# self.score
+			couple_interro.remove(idx_rdm)
 
-#f.collect_data("bonjour", "hello")
-#f.collect_data("bonjour2", "hello2")
-#f.collect_data("bonjour3", "hello3")
-#f.collect_data("bonjour4", "hello4")
-#f.file_to_tableau()
-#for i in range(2*f.nb_words):
-#	print(f.tableau[i])
+
+f = fch_interro()
+f.collect_data("bonjour", "hello")
+f.collect_data("bonjour2", "hello2")
+f.collect_data("bonjour3", "hello3")
+f.collect_data("bonjour4", "hello4")
+f.collect_data("jobi", "joba")
+f.collect_data("dd","dd")
+f.file_to_tableau()
+for i in range(2*f.nb_words):
+	print(f.tableau[i])
+f.interrogate()
 
 
 
