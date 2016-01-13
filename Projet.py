@@ -108,7 +108,7 @@ class Evaluation(QtGui.QWidget):
 			print(self.note)
 
 	def fermer(self):
-		self.close
+		self.close()
 
 class InterfaceGraphique(QtGui.QMainWindow):
 	

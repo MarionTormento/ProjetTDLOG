@@ -1,3 +1,5 @@
+#normaliser les erreurs par rapport à la longueur du mot ?
+
 def distance_levenshtein(mot1,mot2):
 	len1=len(mot1)
 	len2=len(mot2)
@@ -20,7 +22,6 @@ def distance_levenshtein(mot1,mot2):
 distance_levenshtein("arbres","arbres")
 distance_levenshtein("arbres","arbros")
 distance_levenshtein("arbres","maison")
-
 
 
 
