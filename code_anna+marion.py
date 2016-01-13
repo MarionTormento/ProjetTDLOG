@@ -1,10 +1,13 @@
 # si on clique directemet sur préparation terminée ça n'enregistre pas le mot, simple à remplacer mais du coup ça vaudrait le coup de vérifier si on a pas mis deux fois le meme mot dans uen liste et de supprimer les doublons du coup 
+#combo box pyqt qui présente la liste des fiches
+# vous avez répondu ça qui été faux, l'attendu c'était ça juste
 
 import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 from source_code import *
+from leven import *
 
 
 ''' Crée la fiche, la nomme et la prépare'''
@@ -28,7 +31,7 @@ class creer_fiche(QtGui.QWidget):
 	def ok_name(self):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
-		self.f.open_file() #Appelle le open_file du code source
+		self.f.create_file() #Appelle le create_file du code source
 		self.close()
 		'''Lancement de la préparation'''		
 		self.prepa_fiche = Preparation(self.f)
@@ -102,16 +105,16 @@ class choose_fiche(QtGui.QWidget):
 # l'idée : reprendre un code en format comme interogation ou la première fenêtre permet de choisir le fichier sur lequel on veut être interroger
 class Evaluation(QtGui.QWidget):
 
-	def __init__(self, fiche_sur_lequel_on_se_fait_interroger):
+	def __init__(self, fiche):
 		super(Evaluation,self).__init__()
 		'''Lie l'évaluation à la fiche choisie'''
-		self.f = fiche_sur_lequel_on_se_fait_interroger
-		self.f.file_to_tableau() #récupère les date en un tableau [mot langue 1.... mot langue 2...]
-		self.f.interrogate()  #crée les listes to_guess, answer qui vont servir au test
+		self.f = fiche
+		self.f.file_to_tableau() #récupère les mots en un tableau [mot langue 1.... mot langue 2...]
+		self.index_question = 0
 		self.setWindowTitle("Evaluation")
 # à impléter dans la fiche directement
-		'''Compteur de points'''
-		self.note=0
+#		'''Compteur de points'''
+#		self.note=0
 		'''Champs d'interrogation'''
 		self.question=QtGui.QLineEdit(self)
 		self.reponse=QtGui.QLineEdit(self)
@@ -128,40 +131,21 @@ class Evaluation(QtGui.QWidget):
 		posit.addWidget(self.bouton,2,0)
 		posit.addWidget(self.terminer,3,0)
 		self.setLayout(posit)
-		#self.reinit()
-
-
+		self.reinit()
 
 	def reinit(self):
-		for i in range(len(self.numero)):
-			while self.num==self.numero[i]:
-				self.num=random.randint(0,len(self.french)-1)
-		self.numero.append(self.num)
-		self.question.setText(self.french[self.num])
+		self.question.setText(self.f.to_guess[self.index_question])
 		self.reponse.setText("")
-		
-		
+				
 	def mot_suivant(self):
-		for i in range(self.f.nb_words):
-			
-		'''Récupération des valeurs'''
-		if len(self.eval_french)<len(self.french):
-			fr=self.question.text()
-			eng=self.reponse.text()
-			self.eval_french.append(fr)
-			self.eval_eng.append(eng)
-			print(self.eval_french)
-			print(self.eval_eng)
-			if eng==self.english[self.num]:
-				self.note +=1
-			else:
-				self.note +=0
-			self.reinit()
+		user_answer = self.reponse.text()
+		distance = distance_levenshtein(self.f.answer[self.index_question], user_answer)
+		self.index_question += 1
+		if self.index_question >= self.f.nb_words:
+			self.question.setText("Partie Terminée")
+			self.reponse.setText("Ton score est de tadam")
 		else:
-			self.question.clear()
-			self.reponse.clear()
-			print ("c'est fini")
-			print(self.note)
+			self.reinit()
 
 	def fermer(self):
 		self.close()

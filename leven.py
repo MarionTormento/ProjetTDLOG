@@ -19,9 +19,9 @@ def distance_levenshtein(mot1,mot2):
 
 
 
-distance_levenshtein("arbres","arbres")
-distance_levenshtein("arbres","arbros")
-distance_levenshtein("arbres","maison")
+#distance_levenshtein("arbres","arbres")
+#distance_levenshtein("arbres","arbros")
+#distance_levenshtein("arbres","maison")
 
 
 

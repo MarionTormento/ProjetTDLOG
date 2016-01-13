@@ -1,0 +1,4 @@
+tortue:turtle
+baleine:whale
+chat:cat
+chien:dog
