@@ -2,8 +2,7 @@ import sys
 from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
-
-from source_code import *
+import random
 
 class Preparation(QtGui.QWidget):
 
@@ -11,18 +10,18 @@ class Preparation(QtGui.QWidget):
 		super(Preparation,self).__init__(parent)
 		self.setWindowTitle("Preparation")
 		'''Champs pour rentrer les mots'''
-		self.line1=QtGui.QLineEdit(self)
-		self.line2=QtGui.QLineEdit(self)
+		self.champ1=QtGui.QLineEdit(self)
+		self.champ2=QtGui.QLineEdit(self)
 		'''Bouton pour passer à une définition suivante'''
-		self.bouton=QtGui.QPushButton("Définition suivante",self)
+		self.bouton=QtGui.QPushButton("Mot suivant",self)
 		self.bouton.clicked.connect(self.ok_m)
 		'''Bouton pour terminer la préparation'''
 		self.terminer=QtGui.QPushButton("Préparation terminée",self)
 		self.terminer.clicked.connect(self.fermer)
 		'''On place le tout dans la fenêtre'''
 		posit=QtGui.QGridLayout()
-		posit.addWidget(self.line1,0,0)
-		posit.addWidget(self.line2,1,0)
+		posit.addWidget(self.champ1,0,0)
+		posit.addWidget(self.champ2,1,0)
 		posit.addWidget(self.bouton,2,0)
 		posit.addWidget(self.terminer,3,0)
 		self.setLayout(posit)
@@ -32,14 +31,81 @@ class Preparation(QtGui.QWidget):
 
 	def ok_m(self):
 		'''Récupération des valeurs'''
-		fr=self.line1.text()
-		eng=self.line2.text()
+		fr=self.champ1.text()
+		eng=self.champ2.text()
 		self.french.append(fr)
 		self.english.append(eng)
 		print(self.french)
 		print(self.english)
-		self.line1.clear()
-		self.line2.clear()
+		self.champ1.clear()
+		self.champ2.clear()
+
+	def fermer(self):
+		self.close
+
+class Evaluation(QtGui.QWidget):
+
+	def __init__(self,parent=None):
+		super(Evaluation,self).__init__(parent)
+		self.setWindowTitle("Evaluation")
+		'''Liste de départ qui contient les mots'''
+		self.french=['tortue','écureuil','poisson']
+		self.english=['turtle','squirrel','fish']
+		'''Liste qui met en mémoire les réponses'''
+		self.eval_french=[]
+		self.eval_eng=[]
+		'''Liste qui conserve les numéros des questions'''
+		self.numero=[]
+		'''Numéro question posée'''
+		self.num=0
+		'''Compteur de points'''
+		self.note=0
+		'''Champs d'interrogation'''
+		self.question=QtGui.QLineEdit(self)
+		self.reponse=QtGui.QLineEdit(self)
+		'''Bouton pour passer à une définition suivante'''
+		self.bouton=QtGui.QPushButton("Mot suivant",self)
+		self.bouton.clicked.connect(self.mot_suivant)
+		'''Bouton pour terminer la préparation'''
+		self.terminer=QtGui.QPushButton("Évaluation finie",self)
+		self.terminer.clicked.connect(self.fermer)
+		'''On place le tout dans la fenêtre'''
+		posit=QtGui.QGridLayout()
+		posit.addWidget(self.question,0,0)
+		posit.addWidget(self.reponse,1,0)
+		posit.addWidget(self.bouton,2,0)
+		posit.addWidget(self.terminer,3,0)
+		self.setLayout(posit)
+		self.reinit()
+
+	def reinit(self):
+		for i in range(len(self.numero)):
+			while self.num==self.numero[i]:
+				self.num=random.randint(0,len(self.french)-1)
+		self.numero.append(self.num)
+		self.question.setText(self.french[self.num])
+		self.reponse.setText("")
+		
+		
+	def mot_suivant(self):
+		'''Récupération des valeurs'''
+		if len(self.eval_french)<len(self.french):
+			fr=self.question.text()
+			eng=self.reponse.text()
+			self.eval_french.append(fr)
+			self.eval_eng.append(eng)
+			print(self.eval_french)
+			print(self.eval_eng)
+			if eng==self.english[self.num]:
+				self.note +=1
+			else:
+				self.note +=0
+			self.reinit()
+		else:
+			self.question.clear()
+			self.reponse.clear()
+			print ("c'est fini")
+			print(self.note)
 
 	def fermer(self):
 		self.close
@@ -67,8 +133,8 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.prepa.show()
 
 	def evaluer(self):
-		self.prepa=Preparation()
-		self.prepa.show()
+		self.eval=Evaluation()
+		self.eval.show()
 
 def main():
 	app=QtGui.QApplication(sys.argv)
@@ -78,3 +144,4 @@ def main():
 
 if __name__=='__main__':
 	main()
+
