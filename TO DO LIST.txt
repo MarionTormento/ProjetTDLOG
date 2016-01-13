@@ -1,0 +1,14 @@
+Graphiques :
+- Fenêtre à la bonne taille pour voir les titres (pour tout)
+- titre des champs lors de la préparation (mot français / mot anglais)
+- lors de l'eval : ne pas pouvoir modifier la question
+- choisir la fiche sur laquelle tu veux être éval avec combobox
+- améliorer l'affichage du score final
+- tracer des graphes par rapport au score => Boutton afficher les statistiques
+
+Technique :
+- créer un dossier qui recense les fiches existantes
+- préparation terminée => enregistre le mot écrit
+- checker les doublons
+- compteur de score
+- recenser tous les scores à chaque fois / régler la distance de levenstein et les scores à allouer
