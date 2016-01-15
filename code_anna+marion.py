@@ -18,19 +18,34 @@ class creer_fiche(QtGui.QWidget):
 		self.f = fch_interro()
 		self.setWindowTitle("Nommer votre fiche de révsion")
 		'''Champs pour rentrer le nom'''
+		self.titre_name=QtGui.QLabel("Nom de la fiche")
 		self.line_name=QtGui.QLineEdit(self)
+		'''Champs pour définir les langues de la fiche'''
+		self.titre_langue1=QtGui.QLabel("Langue 1 :")
+		self.line_langue1=QtGui.QLineEdit(self)
+		self.titre_langue2=QtGui.QLabel("Langue 2 :")
+		self.line_langue2=QtGui.QLineEdit(self)
 		'''Enregistrer le nom'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.ok_name)
 		'''On place le tout dans la fenêtre'''
 		posit = QtGui.QGridLayout()
-		posit.addWidget(self.line_name,0,0)
-		posit.addWidget(self.bouton_name,2,0)
+		posit.addWidget(self.titre_name,0,0)
+		posit.addWidget(self.line_name,0,1)
+		posit.addWidget(self.titre_langue1,1,0)
+		posit.addWidget(self.line_langue1,1,1)
+		posit.addWidget(self.titre_langue2,2,0)
+		posit.addWidget(self.line_langue2,2,1)
+		posit.addWidget(self.bouton_name,3,0)
 		self.setLayout(posit)
 		
 	def ok_name(self):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
+		'''Récupération des langues'''
+		langue1=self.line_langue1.text()
+		langue2=self.line_langue2.text()
+		'''Appel du create_file'''
 		self.f.create_file() #Appelle le create_file du code source
 		self.close()
 		'''Lancement de la préparation'''		
@@ -49,8 +64,8 @@ class Preparation(QtGui.QWidget):
 		self.line1=QtGui.QLineEdit(self)
 		self.line2=QtGui.QLineEdit(self)
 		'''On définit des titres aux champs'''
-		self.titre1=QtGui.QLabel("titre1")
-		self.titre2=QtGui.QLabel("titre2")
+		self.titre1=QtGui.QLabel("Langue 1 :")
+		self.titre2=QtGui.QLabel("Langue 2 :")
 		'''Bouton pour passer à une définition suivante'''
 		self.bouton=QtGui.QPushButton("Définition suivante",self)
 		self.bouton.clicked.connect(self.ok_m)
@@ -86,19 +101,34 @@ class choose_fiche(QtGui.QWidget):
 		self.f = fch_interro() #ouvre une nouvelle fiche
 		self.setWindowTitle("Sur quel thème souhaitez vous être interrogé ?")
 		'''Champs pour rentrer le nom'''
+		self.titre_name=QtGui.QLabel("Nom de la fiche :")
 		self.line_name=QtGui.QLineEdit(self)
-		'''Enregistrer le nom'''
+		'''Champs pour demander de quelle langue vers quelle langue'''
+		self.titre_langue_question=QtGui.QLabel("Traduction de :")
+		self.line_langue_question=QtGui.QLineEdit(self)
+		self.titre_langue_reponse=QtGui.QLabel("Vers :")
+		self.line_langue_reponse=QtGui.QLineEdit(self)
+		'''Enregistrer le nom + sens évaluation'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.choose_name)
 		'''On place le tout dans la fenêtre'''
 		posit = QtGui.QGridLayout()
-		posit.addWidget(self.line_name,0,0)
-		posit.addWidget(self.bouton_name,2,0)
+		posit.addWidget(self.titre_name,0,0)
+		posit.addWidget(self.line_name,0,1)
+		posit.addWidget(self.titre_langue_question,1,0)
+		posit.addWidget(self.line_langue_question,1,1)
+		posit.addWidget(self.titre_langue_reponse,2,0)
+		posit.addWidget(self.line_langue_reponse,2,1)
+		posit.addWidget(self.bouton_name,4,0)
 		self.setLayout(posit)
 		
 	def choose_name(self):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
+		'''Récupération du sens de traduction'''
+		langue_question=self.line_langue_question.text()
+		langue_reponse=self.line_langue_question.text()
+		'''Ouvre fiche avec nom existant'''
 		self.f.open_file() #ouvre la fiche avec le nom déjà existant
 		# amélioration: vérification que la fiche existe, sinon on dit fuck => leven?, proposition des fiches qui existe déjà
 		self.close()
@@ -123,6 +153,9 @@ class Evaluation(QtGui.QWidget):
 		'''Champs d'interrogation'''
 		self.question=QtGui.QLineEdit(self)
 		self.reponse=QtGui.QLineEdit(self)
+		'''On définit des titres aux champs'''
+		self.titre_question=QtGui.QLabel("Traduis :")
+		self.titre_reponse=QtGui.QLabel("Réponse :")
 		'''Bouton pour passer à une définition suivante'''
 		self.bouton=QtGui.QPushButton("Mot suivant",self)
 		self.bouton.clicked.connect(self.mot_suivant)
@@ -131,8 +164,10 @@ class Evaluation(QtGui.QWidget):
 		self.terminer.clicked.connect(self.fermer)
 		'''On place le tout dans la fenêtre'''
 		posit=QtGui.QGridLayout()
-		posit.addWidget(self.question,0,0)
-		posit.addWidget(self.reponse,1,0)
+		posit.addWidget(self.titre_question,0,0)
+		posit.addWidget(self.titre_reponse,1,0)
+		posit.addWidget(self.question,0,1)
+		posit.addWidget(self.reponse,1,1)
 		posit.addWidget(self.bouton,2,0)
 		posit.addWidget(self.terminer,3,0)
 		self.setLayout(posit)
