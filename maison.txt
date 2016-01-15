@@ -1,0 +1,4 @@
+maison:house
+canapé:sofa
+cuisine:kitchen
+chambre:room

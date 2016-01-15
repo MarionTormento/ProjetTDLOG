@@ -48,6 +48,9 @@ class Preparation(QtGui.QWidget):
 		'''Champs pour rentrer les mots'''
 		self.line1=QtGui.QLineEdit(self)
 		self.line2=QtGui.QLineEdit(self)
+		'''On définit des titres aux champs'''
+		self.titre1=QtGui.QLabel("titre1")
+		self.titre2=QtGui.QLabel("titre2")
 		'''Bouton pour passer à une définition suivante'''
 		self.bouton=QtGui.QPushButton("Définition suivante",self)
 		self.bouton.clicked.connect(self.ok_m)
@@ -56,8 +59,10 @@ class Preparation(QtGui.QWidget):
 		self.terminer.clicked.connect(self.fermer)
 		'''On place le tout dans la fenêtre'''
 		posit = QtGui.QGridLayout()
-		posit.addWidget(self.line1,0,0)
-		posit.addWidget(self.line2,1,0)
+		posit.addWidget(self.titre1,0,0)
+		posit.addWidget(self.titre2,1,0)
+		posit.addWidget(self.line1,0,1)
+		posit.addWidget(self.line2,1,1)
 		posit.addWidget(self.bouton,2,0)
 		posit.addWidget(self.terminer,3,0)
 		self.setLayout(posit)
