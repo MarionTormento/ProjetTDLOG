@@ -187,6 +187,7 @@ class Evaluation(QtGui.QWidget):
 			self.question.setText("Partie Terminée")
 			note = str(self.f.score) + "/" + str(self.f.nb_words)
 			self.reponse.setText("Ton score est de " + note)
+			#créer une fonction qui inscrit les scores dans les stastiqtiques 
 		else:
 			self.reinit()
 
