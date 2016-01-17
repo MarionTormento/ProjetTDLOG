@@ -15,14 +15,4 @@ def distance_levenshtein(mot1,mot2):
 			else:
 				cout=1
 			d[(len2+1)*i+j]=min((d[(len2+1)*(i-1)+j]+1), (d[(len2+1)*i+j-1]+1), (d[(len2+1)*(i-1)+j-1]+cout))
-	print(d[(len2+1)*len1+len2])
-
-
-
-#distance_levenshtein("arbres","arbres")
-#distance_levenshtein("arbres","arbros")
-#distance_levenshtein("arbres","maison")
-
-
-
-
+	return d[(len2+1)*len1+len2]

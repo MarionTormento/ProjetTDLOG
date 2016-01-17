@@ -12,15 +12,24 @@ class fch_interro():
 	def __init__(self):
 		self.nb_words = 0
 		self.name = ""
+		self.langue1 = ""
+		self.langue2 = ""
+		#self.datafiche = ""
 		self.nametxt = ""
+		#self.namedata = ""
+		self.score = 0
 		self.tableau = []
 		self.to_guess = [] #mot à deviner
 		self.answer = [] #réponse correspondante (self.to_guess[i] traduit = self.answer[i])
 
 	def create_file(self): #crée un fichier .txt qui restera en mémoire à terme
 		self.nametxt = self.name + ".txt"
+		#self.namedata = "data_" + self.name + ".txt"
 		self.fiche = open(self.nametxt, "w")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
 		self.fiche.close()
+		#self.datafiche = open(self.namedata,"w")
+		#self.datafiche.write(self.langue1 + ":" + self.langue2 + '\n')
+		#self.datafiche.close()
 
 	def open_file(self): #crée un fichier .txt qui restera en mémoire à terme
 		self.nametxt = self.name + ".txt"
@@ -62,8 +71,6 @@ class fch_interro():
 			self.to_guess.append(self.tableau[idx_rdm + idx_language*self.nb_words])
 			self.answer.append(self.tableau[idx_rdm + (1 - idx_language)*self.nb_words])
 			couple_interro.remove(idx_rdm)
-
-
 
 #f = fch_interro()
 #f.name = "animaux"

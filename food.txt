@@ -1,4 +1,0 @@
-tomate:tomatoe
-pate:pasta
-poisson:fish
-riz:rice

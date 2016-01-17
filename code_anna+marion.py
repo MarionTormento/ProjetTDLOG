@@ -8,7 +8,7 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 from source_code import *
 from leven import *
-
+import os
 
 ''' Crée la fiche, la nomme et la prépare'''
 class creer_fiche(QtGui.QWidget):
@@ -43,8 +43,8 @@ class creer_fiche(QtGui.QWidget):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
 		'''Récupération des langues'''
-		langue1=self.line_langue1.text()
-		langue2=self.line_langue2.text()
+		self.f.langue1 = self.line_langue1.text()
+		self.f.langue2 = self.line_langue2.text()
 		'''Appel du create_file'''
 		self.f.create_file() #Appelle le create_file du code source
 		self.close()
@@ -64,8 +64,8 @@ class Preparation(QtGui.QWidget):
 		self.line1=QtGui.QLineEdit(self)
 		self.line2=QtGui.QLineEdit(self)
 		'''On définit des titres aux champs'''
-		self.titre1=QtGui.QLabel("Langue 1 :")
-		self.titre2=QtGui.QLabel("Langue 2 :")
+		self.titre1=QtGui.QLabel(self.f.langue1)
+		self.titre2=QtGui.QLabel(self.f.langue2)
 		'''Bouton pour passer à une définition suivante'''
 		self.bouton=QtGui.QPushButton("Définition suivante",self)
 		self.bouton.clicked.connect(self.ok_m)
@@ -91,6 +91,7 @@ class Preparation(QtGui.QWidget):
 		self.line2.clear()
 
 	def fermer(self):
+		self.ok_m()
 		self.close()
 
 	
@@ -147,9 +148,6 @@ class Evaluation(QtGui.QWidget):
 		self.f.file_to_tableau() #récupère les mots en un tableau [mot langue 1.... mot langue 2...]
 		self.index_question = 0
 		self.setWindowTitle("Evaluation")
-# à impléter dans la fiche directement
-#		'''Compteur de points'''
-#		self.note=0
 		'''Champs d'interrogation'''
 		self.question=QtGui.QLineEdit(self)
 		self.reponse=QtGui.QLineEdit(self)
@@ -180,10 +178,15 @@ class Evaluation(QtGui.QWidget):
 	def mot_suivant(self):
 		user_answer = self.reponse.text()
 		distance = distance_levenshtein(self.f.answer[self.index_question], user_answer)
+		if distance == 0:
+			self.f.score += 1
+		if distance == 1:
+			self.f.score += 0.5
 		self.index_question += 1
 		if self.index_question >= self.f.nb_words:
 			self.question.setText("Partie Terminée")
-			self.reponse.setText("Ton score est de tadam")
+			note = str(self.f.score) + "/" + str(self.f.nb_words)
+			self.reponse.setText("Ton score est de " + note)
 		else:
 			self.reinit()
 
@@ -195,6 +198,7 @@ class InterfaceGraphique(QtGui.QMainWindow):
 	
 	def __init__(self):
 		super(InterfaceGraphique,self).__init__()
+		self.d = Directory()
 		self.setGeometry(300,300,290,150)
 		self.setWindowTitle("Aide à la révision")
 		'''Bouton préparation'''
@@ -208,6 +212,7 @@ class InterfaceGraphique(QtGui.QMainWindow):
 
 	
 	def preparer(self):
+		os.chdir(self.d.fiche_path)
 		'''On fait appel à la classe creer_fiche pour créer la fiche, cette classe appelera la préparation'''
 		self.fiche = creer_fiche()
 		self.fiche.show()
@@ -216,9 +221,20 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.eval = choose_fiche()
 		self.eval.show()
 
+class Directory():
+	def __init__(self):
+		self.current_path = os.getcwd()
+		self.fiche_path = self.current_path + "\Fiches"
+		self.stats_path = self.current_path + "\Stastistiques"
+		if not os.path.exists(self.fiche_path):
+			os.makedirs(self.fiche_path)
+		if not os.path.exists(self.stats_path):
+			os.makedirs(self.stats_path)
+
 
 def main():
 	app=QtGui.QApplication(sys.argv)
+	directory = Directory()
 	interface=InterfaceGraphique()
 	interface.show()
 	sys.exit(app.exec_())
