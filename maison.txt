@@ -1,0 +1,3 @@
+maison:casa
+cuisine:cocina
+chambre:habitacion

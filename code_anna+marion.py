@@ -22,10 +22,16 @@ class creer_fiche(QtGui.QWidget):
 		self.line_name=QtGui.QLineEdit(self)
 		'''Champs pour définir les langues de la fiche'''
 		self.titre_langue1=QtGui.QLabel("Langue 1 :")
-		self.line_langue1=QtGui.QLineEdit(self)
+		self.line_langue1=QtGui.QComboBox(self)
+		self.line_langue1.addItem("Français")
+		self.line_langue1.addItem("Anglais")
+		self.line_langue1.addItem("Espagnol")
 		self.titre_langue2=QtGui.QLabel("Langue 2 :")
-		self.line_langue2=QtGui.QLineEdit(self)
-		'''Enregistrer le nom'''
+		self.line_langue2=QtGui.QComboBox(self)
+		self.line_langue2.addItem("Français")
+		self.line_langue2.addItem("Anglais")
+		self.line_langue2.addItem("Espagnol")
+		'''Enregistrer le nom et les langues'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.ok_name)
 		'''On place le tout dans la fenêtre'''
@@ -38,13 +44,13 @@ class creer_fiche(QtGui.QWidget):
 		posit.addWidget(self.line_langue2,2,1)
 		posit.addWidget(self.bouton_name,3,0)
 		self.setLayout(posit)
-		
+
 	def ok_name(self):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
 		'''Récupération des langues'''
-		self.f.langue1 = self.line_langue1.text()
-		self.f.langue2 = self.line_langue2.text()
+		self.f.langue1 = self.line_langue1.currentText()
+		self.f.langue2 = self.line_langue2.currentText()
 		'''Appel du create_file'''
 		self.f.create_file() #Appelle le create_file du code source
 		self.close()
@@ -103,12 +109,18 @@ class choose_fiche(QtGui.QWidget):
 		self.setWindowTitle("Sur quel thème souhaitez vous être interrogé ?")
 		'''Champs pour rentrer le nom'''
 		self.titre_name=QtGui.QLabel("Nom de la fiche :")
-		self.line_name=QtGui.QLineEdit(self)
+		self.line_name=QtGui.QLineEdit(self)#proposer les fiches existantes
 		'''Champs pour demander de quelle langue vers quelle langue'''
 		self.titre_langue_question=QtGui.QLabel("Traduction de :")
-		self.line_langue_question=QtGui.QLineEdit(self)
+		self.line_langue_question=QtGui.QComboBox(self)
+		self.line_langue_question.addItem("Français")
+		self.line_langue_question.addItem("Anglais")
+		self.line_langue_question.addItem("Espagnol")
 		self.titre_langue_reponse=QtGui.QLabel("Vers :")
-		self.line_langue_reponse=QtGui.QLineEdit(self)
+		self.line_langue_reponse=QtGui.QComboBox(self)
+		self.line_langue_reponse.addItem("Français")
+		self.line_langue_reponse.addItem("Anglais")
+		self.line_langue_reponse.addItem("Espagnol")
 		'''Enregistrer le nom + sens évaluation'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.choose_name)
@@ -127,8 +139,8 @@ class choose_fiche(QtGui.QWidget):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
 		'''Récupération du sens de traduction'''
-		langue_question=self.line_langue_question.text()
-		langue_reponse=self.line_langue_question.text()
+		langue_question=self.line_langue_question.currentText()
+		langue_reponse=self.line_langue_question.currentText()
 		'''Ouvre fiche avec nom existant'''
 		self.f.open_file() #ouvre la fiche avec le nom déjà existant
 		# amélioration: vérification que la fiche existe, sinon on dit fuck => leven?, proposition des fiches qui existe déjà
@@ -149,7 +161,7 @@ class Evaluation(QtGui.QWidget):
 		self.index_question = 0
 		self.setWindowTitle("Evaluation")
 		'''Champs d'interrogation'''
-		self.question=QtGui.QLineEdit(self)
+		self.question=QtGui.QLabel(self)
 		self.reponse=QtGui.QLineEdit(self)
 		'''On définit des titres aux champs'''
 		self.titre_question=QtGui.QLabel("Traduis :")

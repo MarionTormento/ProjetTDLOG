@@ -1,0 +1,3 @@
+mer:sea
+sable:sand
+eau:water
