@@ -1,11 +1,8 @@
 Graphiques :
 - Fenêtre à la bonne taille pour voir les titres (pour tout)
-- choisir la fiche sur laquelle tu veux être éval avec combobox
 - améliorer l'affichage du score final
 - tracer des graphes par rapport au score => Boutton afficher les statistiques
-- URGENT ! NE PROPOSER QUE LES LANGUES SUR LEQUEL ON PEUT ETRE INTERROGE !!
 
 Technique :
-- créer un dossier qui recense les fiches existantes
 - checker les doublons
 - recenser tous les scores à chaque fois 
