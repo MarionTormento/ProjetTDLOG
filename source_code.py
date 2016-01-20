@@ -119,6 +119,7 @@ class Recap():
 		self.nametxt = "Recapitulatif.txt"
 		self.nb_files = 0
 		self.tableau_name = []
+		self.tableau_langue = []
 		self.tableau = []
 	
 	def add_data(self, nom, langue1, langue2):
@@ -138,6 +139,15 @@ class Recap():
 		for i in range(self.nb_files):
 			name = self.tableau[i].split(':', 1)[0] #mot dans la langue 1
 			self.tableau_name.append(name) #(prend la position nb_words+i)
+			word_intermediaire = self.tableau[i].split(':', 1)[1] #mot correspondant dans la langue 2 + saut de ligne
+			langue = word_intermediaire.split('\n', 1)[0] #mot correspondant dans la langue 2
 
-
+	def which_langue(self, index):
+		self.read_file()
+		lignesansnom = self.tableau[index].split(':', 1)[1]
+		langue1 = lignesansnom.split(':',1)[0]
+		intermed = lignesansnom.split(':',1)[1]
+		langue2 = intermed.split('\n',1)[0]
+		self.tableau_langue.append(langue1)
+		self.tableau_langue.append(langue2)
 

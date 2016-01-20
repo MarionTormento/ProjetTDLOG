@@ -116,17 +116,11 @@ class choose_fiche(QtGui.QWidget):
 		self.line_name=QtGui.QComboBox(self)
 		for i in range(self.r.nb_files):
 			self.line_name.addItem(self.r.tableau_name[i])
-		'''Champs pour demander de quelle langue vers quelle langue'''
 		self.titre_langue_question=QtGui.QLabel("Traduction de :")
 		self.line_langue_question=QtGui.QComboBox(self)
-		self.line_langue_question.addItem("Français")
-		self.line_langue_question.addItem("Anglais")
-		self.line_langue_question.addItem("Espagnol")
 		self.titre_langue_reponse=QtGui.QLabel("Vers :")
 		self.line_langue_reponse=QtGui.QComboBox(self)
-		self.line_langue_reponse.addItem("Français")
-		self.line_langue_reponse.addItem("Anglais")
-		self.line_langue_reponse.addItem("Espagnol")
+		self.line_name.activated.connect(self.menu_langue)
 		'''Enregistrer le nom + sens évaluation'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.choose_name)
@@ -134,16 +128,26 @@ class choose_fiche(QtGui.QWidget):
 		posit = QtGui.QGridLayout()
 		posit.addWidget(self.titre_name,0,0)
 		posit.addWidget(self.line_name,0,1)
+		posit.addWidget(self.bouton_name,4,0)
 		posit.addWidget(self.titre_langue_question,1,0)
 		posit.addWidget(self.line_langue_question,1,1)
 		posit.addWidget(self.titre_langue_reponse,2,0)
 		posit.addWidget(self.line_langue_reponse,2,1)
-		posit.addWidget(self.bouton_name,4,0)
 		self.setLayout(posit)
 		
+	def menu_langue(self):
+		'''Champs pour demander de quelle langue vers quelle langue'''
+		index_file = self.line_name.currentIndex()
+		self.r.which_langue(index_file)
+		for i in range(2):
+			self.line_langue_question.addItem(self.r.tableau_langue[i])
+		for i in range(2):
+			self.line_langue_reponse.addItem(self.r.tableau_langue[i])
+
+
 	def choose_name(self):
 		'''Récupération du nom'''
-		self.f.name = self.line_name.text()
+		self.f.name = self.line_name.currentText()
 		'''Récupération du sens de traduction'''
 		self.f.langue_question=self.line_langue_question.currentText()
 		self.f.langue_reponse=self.line_langue_question.currentText()
