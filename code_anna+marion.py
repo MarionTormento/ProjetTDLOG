@@ -7,7 +7,6 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 from source_code import *
-from leven import *
 import os
 
 ''' Crée la fiche, la nomme et la prépare'''
@@ -16,6 +15,7 @@ class creer_fiche(QtGui.QWidget):
 	def __init__(self):
 		super(creer_fiche, self).__init__()
 		self.f = fch_interro()
+		self.recap = Recap()
 		self.setWindowTitle("Nommer votre fiche de révsion")
 		'''Champs pour rentrer le nom'''
 		self.titre_name=QtGui.QLabel("Nom de la fiche")
@@ -53,7 +53,9 @@ class creer_fiche(QtGui.QWidget):
 		self.f.langue2 = self.line_langue2.currentText()
 		'''Appel du create_file'''
 		self.f.create_file() #Appelle le create_file du code source
+		self.recap.add_data(self.f.name, self.f.langue1, self.f.langue2)
 		self.close()
+		self.f.collect_data(self.f.langue1, self.f.langue2)
 		'''Lancement de la préparation'''		
 		self.prepa_fiche = Preparation(self.f)
 		self.prepa_fiche.show()		
@@ -106,10 +108,14 @@ class choose_fiche(QtGui.QWidget):
 	def __init__(self):
 		super(choose_fiche, self).__init__()
 		self.f = fch_interro() #ouvre une nouvelle fiche
+		self.r = Recap()
+		self.r.file_to_tableau()
 		self.setWindowTitle("Sur quel thème souhaitez vous être interrogé ?")
 		'''Champs pour rentrer le nom'''
 		self.titre_name=QtGui.QLabel("Nom de la fiche :")
-		self.line_name=QtGui.QLineEdit(self)#proposer les fiches existantes
+		self.line_name=QtGui.QComboBox(self)
+		for i in range(self.r.nb_files):
+			self.line_name.addItem(self.r.tableau_name[i])
 		'''Champs pour demander de quelle langue vers quelle langue'''
 		self.titre_langue_question=QtGui.QLabel("Traduction de :")
 		self.line_langue_question=QtGui.QComboBox(self)
@@ -139,8 +145,8 @@ class choose_fiche(QtGui.QWidget):
 		'''Récupération du nom'''
 		self.f.name = self.line_name.text()
 		'''Récupération du sens de traduction'''
-		langue_question=self.line_langue_question.currentText()
-		langue_reponse=self.line_langue_question.currentText()
+		self.f.langue_question=self.line_langue_question.currentText()
+		self.f.langue_reponse=self.line_langue_question.currentText()
 		'''Ouvre fiche avec nom existant'''
 		self.f.open_file() #ouvre la fiche avec le nom déjà existant
 		# amélioration: vérification que la fiche existe, sinon on dit fuck => leven?, proposition des fiches qui existe déjà
@@ -150,7 +156,6 @@ class choose_fiche(QtGui.QWidget):
 		self.evaluation_fiche.show()	
 
 
-# l'idée : reprendre un code en format comme interogation ou la première fenêtre permet de choisir le fichier sur lequel on veut être interroger
 class Evaluation(QtGui.QWidget):
 
 	def __init__(self, fiche):
@@ -231,6 +236,7 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.fiche.show()
 
 	def evaluer(self):
+		os.chdir(self.d.fiche_path)
 		self.eval = choose_fiche()
 		self.eval.show()
 
@@ -238,16 +244,15 @@ class Directory():
 	def __init__(self):
 		self.current_path = os.getcwd()
 		self.fiche_path = self.current_path + "\Fiches"
-		self.stats_path = self.current_path + "\Stastistiques"
+		#self.stats_path = self.current_path + "\Stastistiques"
 		if not os.path.exists(self.fiche_path):
 			os.makedirs(self.fiche_path)
-		if not os.path.exists(self.stats_path):
-			os.makedirs(self.stats_path)
+		#if not os.path.exists(self.stats_path):
+		#	os.makedirs(self.stats_path)
 
 
 def main():
 	app=QtGui.QApplication(sys.argv)
-	directory = Directory()
 	interface=InterfaceGraphique()
 	interface.show()
 	sys.exit(app.exec_())
