@@ -124,7 +124,7 @@ class Recap():
 	
 	def add_data(self, nom, langue1, langue2):
 		self.fiche = open(self.nametxt, "a")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
-		definition = nom + ":" + langue1 + ":" + langue2 + '\n'
+		definition = nom + ":" + langue1 + ":" + langue2 + ":" + '\n'
 		self.fiche.write(definition)
 		self.fiche.close()
 	
@@ -139,15 +139,31 @@ class Recap():
 		for i in range(self.nb_files):
 			name = self.tableau[i].split(':', 1)[0] #mot dans la langue 1
 			self.tableau_name.append(name) #(prend la position nb_words+i)
-			word_intermediaire = self.tableau[i].split(':', 1)[1] #mot correspondant dans la langue 2 + saut de ligne
-			langue = word_intermediaire.split('\n', 1)[0] #mot correspondant dans la langue 2
 
 	def which_langue(self, index):
 		self.read_file()
+		self.tableau_langue = []
 		lignesansnom = self.tableau[index].split(':', 1)[1]
 		langue1 = lignesansnom.split(':',1)[0]
 		intermed = lignesansnom.split(':',1)[1]
-		langue2 = intermed.split('\n',1)[0]
+		langue2 = intermed.split(':',1)[0]
 		self.tableau_langue.append(langue1)
 		self.tableau_langue.append(langue2)
+
+	def write_score(self, name, note):
+		data = open(self.nametxt, "r")
+		index_ligne = 0
+		for line in data:
+			if name in line:
+				break
+			else:
+				index_ligne += 1
+		data.close()
+		old_text = self.tableau[index_ligne]
+		new_text = old_text.split('\n',1)[0] + note + ":" + '\n'
+		self.tableau[index_ligne] = new_text
+		with open(self.nametxt, "w") as data:
+			data.writelines(self.tableau)		 
+		data.close()
+
 

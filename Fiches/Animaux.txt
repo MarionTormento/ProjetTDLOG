@@ -1,0 +1,4 @@
+Français:Anglais
+chat:cat
+chien:dog
+poisson rouge:goldfish

@@ -26,11 +26,9 @@ class creer_fiche(QtGui.QWidget):
 		self.line_langue1.addItem("Français")
 		self.line_langue1.addItem("Anglais")
 		self.line_langue1.addItem("Espagnol")
+		self.line_langue1.activated.connect(self.menu_langue)
 		self.titre_langue2=QtGui.QLabel("Langue 2 :")
 		self.line_langue2=QtGui.QComboBox(self)
-		self.line_langue2.addItem("Français")
-		self.line_langue2.addItem("Anglais")
-		self.line_langue2.addItem("Espagnol")
 		'''Enregistrer le nom et les langues'''
 		self.bouton_name=QtGui.QPushButton("Ok",self)
 		self.bouton_name.clicked.connect(self.ok_name)
@@ -44,6 +42,20 @@ class creer_fiche(QtGui.QWidget):
 		posit.addWidget(self.line_langue2,2,1)
 		posit.addWidget(self.bouton_name,3,0)
 		self.setLayout(posit)
+
+	def menu_langue(self):
+		index_langue = self.line_langue1.currentIndex()
+		self.line_langue2.clear()
+		if index_langue == 0:
+			self.line_langue2.addItem("Anglais")
+			self.line_langue2.addItem("Espagnol")
+		if index_langue == 1:
+			self.line_langue2.addItem("Français")
+			self.line_langue2.addItem("Espagnol")
+		if index_langue == 2:
+			self.line_langue2.addItem("Français")
+			self.line_langue2.addItem("Anglais")
+
 
 	def ok_name(self):
 		'''Récupération du nom'''
@@ -139,11 +151,18 @@ class choose_fiche(QtGui.QWidget):
 		'''Champs pour demander de quelle langue vers quelle langue'''
 		index_file = self.line_name.currentIndex()
 		self.r.which_langue(index_file)
+		self.line_langue_question.clear()
+		self.line_langue_reponse.clear()
 		for i in range(2):
 			self.line_langue_question.addItem(self.r.tableau_langue[i])
+		self.line_langue_question.activated.connect(self.choix_langue_question)
 		for i in range(2):
 			self.line_langue_reponse.addItem(self.r.tableau_langue[i])
 
+	def choix_langue_question(self):
+		index_langue = self.line_langue_question.currentIndex()
+		self.line_langue_reponse.clear()	
+		self.line_langue_reponse.addItem(self.r.tableau_langue[1-index_langue])
 
 	def choose_name(self):
 		'''Récupération du nom'''
@@ -164,6 +183,8 @@ class Evaluation(QtGui.QWidget):
 
 	def __init__(self, fiche):
 		super(Evaluation,self).__init__()
+		self.r = Recap()
+		self.r.read_file()
 		'''Lie l'évaluation à la fiche choisie'''
 		self.f = fiche
 		self.f.file_to_tableau() #récupère les mots en un tableau [mot langue 1.... mot langue 2...]
@@ -207,6 +228,7 @@ class Evaluation(QtGui.QWidget):
 		if self.index_question >= self.f.nb_words:
 			self.question.setText("Partie Terminée")
 			note = str(self.f.score) + "/" + str(self.f.nb_words)
+			self.r.write_score(self.f.name, note)
 			self.reponse.setText("Ton score est de " + note)
 			#créer une fonction qui inscrit les scores dans les stastiqtiques 
 		else:

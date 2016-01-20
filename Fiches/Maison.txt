@@ -1,0 +1,4 @@
+Français:Espagnol
+maison:casa
+chambre:habitacion
+lit:cama
