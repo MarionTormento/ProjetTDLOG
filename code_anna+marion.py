@@ -226,21 +226,37 @@ class Evaluation(QtGui.QWidget):
 		if distance == 1:
 			self.f.score += 0.5
 		if distance > 1:
-			q_a_ya = self.f.to_guess[self.index_question] + ":" + self.f.answer[self.index_question] + ":" + user_answer + '\n'
+			q_a_ya = self.f.to_guess[self.index_question] + ":" + self.f.answer[self.index_question] + ":" + user_answer
 			self.erreur.append(q_a_ya)
 		self.index_question += 1
 		if self.index_question >= self.f.nb_words:
-			self.question.setText("Partie Terminée")
-			note = str(self.f.score) + "/" + str(self.f.nb_words)
-			self.r.write_score(self.f.name, note)
-			self.reponse.setText("Ton score est de " + note)
+			#self.question.setText("Partie Terminée")
+			#note = str(self.f.score) + "/" + str(self.f.nb_words)
+			#self.r.write_score(self.f.name, note)
+			#self.reponse.setText("Ton score est de " + note)
 			#créer une fonction qui inscrit les scores dans les stastiqtiques 
+			termin=PartieTermin()
+			termin.show()
 		else:
 			self.reinit()
 
 	def fermer(self):
 		self.close()
 
+
+class PartieTermin(QtGui.QWidget):
+	
+	def __init__(self):
+		super(PartieTermin,self).__init__()
+		'''On prend le tableau récap des erreurs'''
+		#self.tableau=tableau
+		'''Affichage score'''
+		self.titre=QtGui.QLabel("Évaluation terminée!")
+		self.affiche_score=QtGui.QLabel("Vous avez obtenu un score de :")
+		posit=QtGui.QGridLayout()
+		posit.addWidget(self.titre,0,0)
+		posit.addWidget(self.affiche_score,1,0)
+		self.setLayout(posit)
 
 class InterfaceGraphique(QtGui.QMainWindow):
 	
