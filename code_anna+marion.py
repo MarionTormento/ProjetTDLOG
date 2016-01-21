@@ -185,6 +185,7 @@ class Evaluation(QtGui.QWidget):
 		super(Evaluation,self).__init__()
 		self.r = Recap()
 		self.r.read_file()
+		self.erreur = []
 		'''Lie l'évaluation à la fiche choisie'''
 		self.f = fiche
 		self.f.file_to_tableau() #récupère les mots en un tableau [mot langue 1.... mot langue 2...]
@@ -224,6 +225,9 @@ class Evaluation(QtGui.QWidget):
 			self.f.score += 1
 		if distance == 1:
 			self.f.score += 0.5
+		if distance > 1:
+			q_a_ya = self.f.to_guess[self.index_question] + ":" + self.f.answer[self.index_question] + ":" + user_answer + '\n'
+			self.erreur.append(q_a_ya)
 		self.index_question += 1
 		if self.index_question >= self.f.nb_words:
 			self.question.setText("Partie Terminée")
