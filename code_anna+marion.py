@@ -114,7 +114,7 @@ class Preparation(QtGui.QWidget):
 		self.ok_m()
 		self.close()
 
-	
+
 class choose_fiche(QtGui.QWidget):
 
 	def __init__(self):
@@ -186,6 +186,7 @@ class Evaluation(QtGui.QWidget):
 		self.r = Recap()
 		self.r.read_file()
 		self.erreur = []
+		self.note=0
 		'''Lie l'évaluation à la fiche choisie'''
 		self.f = fiche
 		self.f.file_to_tableau() #récupère les mots en un tableau [mot langue 1.... mot langue 2...]
@@ -235,8 +236,9 @@ class Evaluation(QtGui.QWidget):
 			#self.r.write_score(self.f.name, note)
 			#self.reponse.setText("Ton score est de " + note)
 			#créer une fonction qui inscrit les scores dans les stastiqtiques 
-			termin=PartieTermin()
-			termin.show()
+			self.note=self.f.score
+			self.termin=PartieTermin(self.erreur,self.note)
+			self.termin.show()
 		else:
 			self.reinit()
 
@@ -246,17 +248,26 @@ class Evaluation(QtGui.QWidget):
 
 class PartieTermin(QtGui.QWidget):
 	
-	def __init__(self):
+	def __init__(self,erreur,note):
 		super(PartieTermin,self).__init__()
 		'''On prend le tableau récap des erreurs'''
-		#self.tableau=tableau
+		self.tableau=erreur
+		self.score=note
+		'''Titre de la fenêtre'''
+		self.setWindowTitle("TADAAAA")
 		'''Affichage score'''
 		self.titre=QtGui.QLabel("Évaluation terminée!")
-		self.affiche_score=QtGui.QLabel("Vous avez obtenu un score de :")
+		self.affiche_score=QtGui.QLabel("Vous avez obtenu un score de :"+ str(note))
+		self.annonce_erreur=QtGui.QLabel("Vos erreurs sont les suivantes :")
+		self.affiche_erreur=QtGui.QLabel(str(self.tableau))
+		'''On positionne le tout'''
 		posit=QtGui.QGridLayout()
 		posit.addWidget(self.titre,0,0)
 		posit.addWidget(self.affiche_score,1,0)
+		posit.addWidget(self.annonce_erreur,2,0)
+		posit.addWidget(self.affiche_erreur,3,0)
 		self.setLayout(posit)
+
 
 class InterfaceGraphique(QtGui.QMainWindow):
 	
@@ -273,7 +284,9 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.boutonEvaluation=QtGui.QPushButton("Evaluation",self)#création de l'onglet d'évaluation
 		self.boutonEvaluation.move(150,20)
 		self.boutonEvaluation.clicked.connect(self.evaluer)#appel de la fonction si on clique sur cet onglet
-
+		'''Bouton Statistiques'''
+		self.boutonStat=QtGui.QPushButton("Tes statistiques",self)
+		self.boutonStat.move(85,50)
 	
 	def preparer(self):
 		os.chdir(self.d.fiche_path)
