@@ -171,7 +171,8 @@ class choose_fiche(QtGui.QWidget):
 		self.f.langue_question=self.line_langue_question.currentText()
 		self.f.langue_reponse=self.line_langue_question.currentText()
 		'''Ouvre fiche avec nom existant'''
-		self.f.open_file() #ouvre la fiche avec le nom déjà existant
+		self.f.open_file() 
+		#ouvre la fiche avec le nom déjà existant
 		# amélioration: vérification que la fiche existe, sinon on dit fuck => leven?, proposition des fiches qui existe déjà
 		self.close()
 		'''Lancement de l'Evaluation'''		
@@ -185,8 +186,10 @@ class Evaluation(QtGui.QWidget):
 		super(Evaluation,self).__init__()
 		self.r = Recap()
 		self.r.read_file()
-		self.erreur = []
-		self.note=0
+		self.erreur_to_guess = []
+		self.erreur_answer = []
+		self.erreur_user_answer = []
+		self.note = 0
 		'''Lie l'évaluation à la fiche choisie'''
 		self.f = fiche
 		self.f.file_to_tableau() #récupère les mots en un tableau [mot langue 1.... mot langue 2...]
@@ -199,11 +202,11 @@ class Evaluation(QtGui.QWidget):
 		self.titre_question=QtGui.QLabel("Traduis :")
 		self.titre_reponse=QtGui.QLabel("Réponse :")
 		'''Bouton pour passer à une définition suivante'''
-		self.bouton=QtGui.QPushButton("Mot suivant",self)
+		if self.f.nb_words == 1:
+			self.bouton = QtGui.QPushButton("Evaluation Terminée", self)
+		else:
+			self.bouton=QtGui.QPushButton("Mot suivant",self)
 		self.bouton.clicked.connect(self.mot_suivant)
-		'''Bouton pour terminer la préparation'''
-		self.terminer=QtGui.QPushButton("Évaluation finie",self)
-		self.terminer.clicked.connect(self.fermer)
 		'''On place le tout dans la fenêtre'''
 		posit=QtGui.QGridLayout()
 		posit.addWidget(self.titre_question,0,0)
@@ -211,7 +214,6 @@ class Evaluation(QtGui.QWidget):
 		posit.addWidget(self.question,0,1)
 		posit.addWidget(self.reponse,1,1)
 		posit.addWidget(self.bouton,2,0)
-		posit.addWidget(self.terminer,3,0)
 		self.setLayout(posit)
 		self.reinit()
 
@@ -226,46 +228,68 @@ class Evaluation(QtGui.QWidget):
 			self.f.score += 1
 		if distance == 1:
 			self.f.score += 0.5
+			self.erreur_to_guess.append(self.f.to_guess[self.index_question]) 
+			self.erreur_answer.append(self.f.answer[self.index_question])
+			self.erreur_user_answer.append(user_answer)
 		if distance > 1:
-			q_a_ya = self.f.to_guess[self.index_question] + ":" + self.f.answer[self.index_question] + ":" + user_answer
-			self.erreur.append(q_a_ya)
+			self.erreur_to_guess.append(self.f.to_guess[self.index_question]) 
+			self.erreur_answer.append(self.f.answer[self.index_question])
+			self.erreur_user_answer.append(user_answer)
 		self.index_question += 1
+		if self.index_question == self.f.nb_words - 1:
+			self.bouton.setText("Evaluation Terminée")
 		if self.index_question >= self.f.nb_words:
-			#self.question.setText("Partie Terminée")
-			#note = str(self.f.score) + "/" + str(self.f.nb_words)
-			#self.r.write_score(self.f.name, note)
-			#self.reponse.setText("Ton score est de " + note)
-			#créer une fonction qui inscrit les scores dans les stastiqtiques 
-			self.note=self.f.score
-			self.termin=PartieTermin(self.erreur,self.note)
+			self.note = str(self.f.score) + "/" + str(self.f.nb_words)
+			self.r.write_score(self.f.name, self.note)
+			self.termin = PartieTermin(self.erreur_to_guess, self.erreur_answer, self.erreur_user_answer, self.note)
 			self.termin.show()
+			self.close()
 		else:
 			self.reinit()
-
-	def fermer(self):
-		self.close()
 
 
 class PartieTermin(QtGui.QWidget):
 	
-	def __init__(self,erreur,note):
+	def __init__(self, a_traduire, reponse_juste, reponse_user ,note):
 		super(PartieTermin,self).__init__()
 		'''On prend le tableau récap des erreurs'''
-		self.tableau=erreur
-		self.score=note
+		self.to_guess = a_traduire
+		self.answer = reponse_juste
+		self.user_answer = reponse_user
+		self.score = note
 		'''Titre de la fenêtre'''
 		self.setWindowTitle("TADAAAA")
 		'''Affichage score'''
-		self.titre=QtGui.QLabel("Évaluation terminée!")
-		self.affiche_score=QtGui.QLabel("Vous avez obtenu un score de :"+ str(note))
-		self.annonce_erreur=QtGui.QLabel("Vos erreurs sont les suivantes :")
-		self.affiche_erreur=QtGui.QLabel(str(self.tableau))
+		self.titre = QtGui.QLabel("Évaluation terminée!")
+		self.affiche_score = QtGui.QLabel("Vous avez obtenu un score de : "+ str(note))
+		index = len(self.to_guess)
+		if index == 0:
+			self.annonce_erreur = QtGui.QLabel("Vous n'avez fait aucune erreur, bravo!")
+		else: 
+			self.annonce_erreur = QtGui.QLabel("Vos erreurs sont les suivantes")
+			self.question = QtGui.QLabel("Question")
+			self.reponse = QtGui.QLabel("Réponse Attendue")
+			self.votre_reponse = QtGui.QLabel("Votre réponse")
+			self.affiche_question = []
+			self.affiche_reponse = []
+			self.affiche_user_reponse = []
+			for i in range(index):
+				self.affiche_question.append(QtGui.QLabel(self.to_guess[i]))
+				self.affiche_reponse.append(QtGui.QLabel(self.answer[i]))
+				self.affiche_user_reponse.append(QtGui.QLabel(self.user_answer[i]))
 		'''On positionne le tout'''
 		posit=QtGui.QGridLayout()
 		posit.addWidget(self.titre,0,0)
 		posit.addWidget(self.affiche_score,1,0)
 		posit.addWidget(self.annonce_erreur,2,0)
-		posit.addWidget(self.affiche_erreur,3,0)
+		if index != 0:
+			posit.addWidget(self.question, 3, 0)
+			posit.addWidget(self.reponse, 3, 1)
+			posit.addWidget(self.votre_reponse, 3, 2)
+			for i in range(index):
+				posit.addWidget(self.affiche_question[i],4+i,0)
+				posit.addWidget(self.affiche_reponse[i], 4+i, 1)
+				posit.addWidget(self.affiche_user_reponse[i], 4+i, 2)
 		self.setLayout(posit)
 
 

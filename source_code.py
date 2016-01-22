@@ -166,4 +166,3 @@ class Recap():
 			data.writelines(self.tableau)		 
 		data.close()
 
-
