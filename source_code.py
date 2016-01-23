@@ -5,8 +5,6 @@
 # ATTENTION PROBLEME DANS READ FILE il ne voit pas la denière ligne
 
 import random
-import os
-
 
 # Fiche de vocabulaire sur un thème unique, choix du titre du fichier, collect data à partir de l'interface graphique
 class fch_interro():
@@ -82,19 +80,6 @@ class fch_interro():
 			self.answer.append(self.tableau[idx_rdm + (1 - idx_language)*self.nb_words])
 			couple_interro.remove(idx_rdm)
 
-class stats():
-	def __init__(self):
-		self.nb_words = 0
-		self.name = ""
-		self.langue1 = ""
-		self.langue2 = ""
-		#self.datafiche = ""
-		self.nametxt = ""
-		#self.namedata = ""
-		self.score = 0
-		self.tableau = []
-		self.to_guess = [] #mot à deviner
-		self.answer = [] #réponse correspondante (self.to_guess[i] traduit = self.answer[i])
 
 def distance_levenshtein(mot1,mot2):
 	len1=len(mot1)
@@ -165,4 +150,3 @@ class Recap():
 		with open(self.nametxt, "w") as data:
 			data.writelines(self.tableau)		 
 		data.close()
-

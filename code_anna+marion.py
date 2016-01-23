@@ -169,6 +169,7 @@ class choose_fiche(QtGui.QWidget):
 		self.f.name = self.line_name.currentText()
 		'''Récupération du sens de traduction'''
 		self.f.langue_question=self.line_langue_question.currentText()
+		self.f
 		self.f.langue_reponse=self.line_langue_question.currentText()
 		'''Ouvre fiche avec nom existant'''
 		self.f.open_file() 
@@ -327,11 +328,9 @@ class Directory():
 	def __init__(self):
 		self.current_path = os.getcwd()
 		self.fiche_path = self.current_path + "\Fiches"
-		#self.stats_path = self.current_path + "\Stastistiques"
 		if not os.path.exists(self.fiche_path):
 			os.makedirs(self.fiche_path)
-		#if not os.path.exists(self.stats_path):
-		#	os.makedirs(self.stats_path)
+
 
 
 def main():
