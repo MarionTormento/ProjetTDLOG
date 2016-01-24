@@ -1,0 +1,6 @@
+Français:Anglais
+chat:cat
+chien:dog
+poisson rouge:goldfish
+écureuil:squirrel
+souris:mouse

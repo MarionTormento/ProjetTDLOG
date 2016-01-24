@@ -128,12 +128,16 @@ class Recap():
 	def which_langue(self, index):
 		self.read_file()
 		self.tableau_langue = []
-		lignesansnom = self.tableau[index].split(':', 1)[1]
-		langue1 = lignesansnom.split(':',1)[0]
-		intermed = lignesansnom.split(':',1)[1]
-		langue2 = intermed.split(':',1)[0]
+		tableau_int = self.tableau[index].split(':')
+		langue1 = tableau_int[1]
+		langue2 = tableau_int[2]
 		self.tableau_langue.append(langue1)
 		self.tableau_langue.append(langue2)
+
+	def recup_score(self, index):
+		self.read_file()
+		self.tableau_score = self.tableau[index].split(':')
+		self.tableau_score = self.tableau_score[3:len(self.tableau_score)-1]
 
 	def write_score(self, name, note):
 		data = open(self.nametxt, "r")
@@ -150,3 +154,4 @@ class Recap():
 		with open(self.nametxt, "w") as data:
 			data.writelines(self.tableau)		 
 		data.close()
+

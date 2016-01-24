@@ -1,0 +1,6 @@
+Français:Anglais
+avion:plane
+voiture:car
+vélo:bicycle
+train:train
+métro:subway

@@ -3,7 +3,7 @@ from PyQt4 import QtGui
 from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 import random
-import numpy as np
+#import numpy as np
 import pyqtgraph as pg 
 
 '''Ce qu'on a à la base : une liste avec les notes, 

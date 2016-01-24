@@ -8,6 +8,9 @@ from PyQt4 import QtCore
 from PyQt4.QtCore import SIGNAL
 from source_code import *
 import os
+import random
+import numpy as np
+import pyqtgraph as pg 
 
 ''' Crée la fiche, la nomme et la prépare'''
 class creer_fiche(QtGui.QWidget):
@@ -311,6 +314,7 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.boutonEvaluation.clicked.connect(self.evaluer)#appel de la fonction si on clique sur cet onglet
 		'''Bouton Statistiques'''
 		self.boutonStat=QtGui.QPushButton("Tes statistiques",self)
+		self.boutonStat.clicked.connect(self.statistiques)#appel de la fonction si on clique sur cet onglet
 		self.boutonStat.move(85,50)
 	
 	def preparer(self):
@@ -324,12 +328,60 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.eval = choose_fiche()
 		self.eval.show()
 
+	def statistiques(self):
+		os.chdir(self.d.fiche_path)
+		self.stat = Statistiques()
+		self.stat.show()
+
 class Directory():
 	def __init__(self):
 		self.current_path = os.getcwd()
 		self.fiche_path = self.current_path + "\Fiches"
 		if not os.path.exists(self.fiche_path):
 			os.makedirs(self.fiche_path)
+
+
+class Statistiques(QtGui.QWidget):
+	
+	def __init__(self):
+		super(Statistiques,self).__init__()
+		self.r = Recap()
+		self.r.file_to_tableau()
+		self.setGeometry(300,300,290,150)
+		self.setWindowTitle("Tes statistiques")
+		self.titre_name=QtGui.QLabel("Nom de la fiche :")
+		self.line_name=QtGui.QComboBox(self)
+		for i in range(self.r.nb_files):
+			self.line_name.addItem(self.r.tableau_name[i])
+		self.line_name.activated.connect(self.menu_score)
+		'''On place le tout dans la fenêtre'''
+		posit = QtGui.QGridLayout()
+		posit.addWidget(self.titre_name,0,0)
+		posit.addWidget(self.line_name,0,1)
+		self.setLayout(posit)
+	
+
+	def ramener_note(self):
+		note_ramen=[]
+		for i in range(len(self.r.tableau_score)):
+			note = self.r.tableau_score[i].split('/',1)[0]
+			intermed = self.r.tableau_score[i].split('/',1)[1]
+			nb_question = intermed.split('/n',1)[0]
+			note_ramen.append(20*float(note)/float(nb_question))
+		return (note_ramen)
+
+	def menu_score(self):
+		'''Champs pour demander de quelle langue vers quelle langue'''
+		index_file = self.line_name.currentIndex()
+		self.r.recup_score(index_file)
+		'''On définit les axes du plot'''
+		self.x= list(range(len(self.r.tableau_score)))
+		self.y=self.ramener_note()
+		'''Ouvre le graphe dans une autre fenêtre'''
+		self.courbe=pg.plot()
+		self.courbe.addLegend()
+		self.courbe.plot(self.x,self.y,pen='r', name=self.line_name.currentText())
+		self.close()
 
 
 

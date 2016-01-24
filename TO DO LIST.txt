@@ -1,6 +1,5 @@
 Graphiques :
 - Fenêtre à la bonne taille pour voir les titres (pour tout)
-- améliorer l'affichage du score final: quand on est en préparation ne pas avoir accès au "préparation terminée" et meilleur présentation pour le score final
 - tracer des graphes par rapport au score => Boutton afficher les statistiques
 
 Technique :
