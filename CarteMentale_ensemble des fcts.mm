@@ -1,6 +1,6 @@
 <map version="1.0.1">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node CREATED="1453563969678" ID="ID_499695072" MODIFIED="1453564799287" TEXT="Nom du logiciel a trouver">
+<node CREATED="1453563969678" ID="ID_499695072" MODIFIED="1453659073328" TEXT="ANMA">
 <node CREATED="1453564008837" ID="ID_750541815" MODIFIED="1453564014520" POSITION="right" TEXT="Code Model">
 <node CREATED="1453564021416" ID="ID_1522418287" MODIFIED="1453564066063" TEXT="Fiches d&apos;interrogation">
 <node CREATED="1453564114393" ID="ID_495467584" MODIFIED="1453564120904" TEXT="initialisation"/>
@@ -20,6 +20,7 @@
 <node CREATED="1453564238436" ID="ID_1176602538" MODIFIED="1453564252070" TEXT="transformer la fiche r&#xe9;capitulative en un tableau"/>
 <node CREATED="1453564252621" ID="ID_95789181" MODIFIED="1453564269852" TEXT="identifier les langues disponibles pour une fiche donn&#xe9;e"/>
 <node CREATED="1453564270786" ID="ID_703631816" MODIFIED="1453564275621" TEXT="&#xe9;crire le score"/>
+<node CREATED="1453659000654" ID="ID_205074093" MODIFIED="1453659121577" TEXT="Collecter les diff&#xe9;rents scores"/>
 </node>
 </node>
 <node CREATED="1453564015967" ID="ID_1372240797" MODIFIED="1453564018382" POSITION="right" TEXT="Code View">
@@ -54,6 +55,11 @@
 </node>
 <node CREATED="1453564443902" ID="ID_1777261757" MODIFIED="1453564463697" TEXT="R&#xe9;sultat apr&#xe8;s une &#xe9;valuation">
 <node CREATED="1453564769359" ID="ID_1755186145" MODIFIED="1453564773978" TEXT="initialisation"/>
+</node>
+<node CREATED="1453659128662" ID="ID_1395031510" MODIFIED="1453659131277" TEXT="Statistiques">
+<node CREATED="1453659146402" ID="ID_61072050" MODIFIED="1453659151185" TEXT="initialisation"/>
+<node CREATED="1453659151646" ID="ID_1353648116" MODIFIED="1453659159245" TEXT="Ram&#xe8;ne les notes sur 20"/>
+<node CREATED="1453659159679" ID="ID_1529842614" MODIFIED="1453659295940" TEXT="Choix de la fiche dont on souhaite voir les statistiques"/>
 </node>
 <node CREATED="1453564498327" ID="ID_78234843" MODIFIED="1453564500739" TEXT="Main"/>
 </node>

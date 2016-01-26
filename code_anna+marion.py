@@ -303,7 +303,7 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		super(InterfaceGraphique,self).__init__()
 		self.d = Directory()
 		self.setGeometry(300,300,290,150)
-		self.setWindowTitle("Aide à la révision")
+		self.setWindowTitle("ANMA : Aide à la révision")
 		'''Bouton préparation'''
 		self.boutonPreparation=QtGui.QPushButton("Préparation",self)#création de l'onglet de préparation
 		self.boutonPreparation.move(20,20)
@@ -375,13 +375,13 @@ class Statistiques(QtGui.QWidget):
 		index_file = self.line_name.currentIndex()
 		self.r.recup_score(index_file)
 		'''On définit les axes du plot'''
-		self.x= list(range(len(self.r.tableau_score)))
+		self.x= list(range(1,len(self.r.tableau_score)+1))
 		self.y=self.ramener_note()
 		'''Ouvre le graphe dans une autre fenêtre'''
 		self.courbe=pg.plot()
 		self.courbe.addLegend()
 		self.courbe.setLabel('left','Notes (/20)')
-		self.courbe.setLabel('bottom','Questions')
+		self.courbe.setLabel('bottom',"Sessions d'évaluation")
 		self.courbe.plot(self.x,self.y,pen='r', name=self.line_name.currentText())
 		self.close()
 

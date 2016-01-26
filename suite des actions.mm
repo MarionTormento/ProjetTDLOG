@@ -1,6 +1,6 @@
 <map version="1.0.1">
 <!-- To view this file, download free mind mapping software FreeMind from http://freemind.sourceforge.net -->
-<node CREATED="1453564931408" ID="ID_446306820" MODIFIED="1453564939282" TEXT="Nom du logiciel &#xe0; trouver">
+<node CREATED="1453564931408" ID="ID_446306820" MODIFIED="1453659332550" TEXT="ANMA">
 <node CREATED="1453564944265" ID="ID_525166215" MODIFIED="1453564954289" POSITION="right" TEXT="Pr&#xe9;paration">
 <node CREATED="1453564968519" ID="ID_1033277044" MODIFIED="1453564996045" TEXT="Choix du nom de la fiche et des langues de traduction">
 <node CREATED="1453564998575" ID="ID_123556591" MODIFIED="1453565029094" TEXT="Remplissage de la fiche"/>
@@ -15,6 +15,10 @@
 </node>
 </node>
 </node>
-<node CREATED="1453564957119" ID="ID_1656541798" MODIFIED="1453564960843" POSITION="right" TEXT="Statistiques"/>
+<node CREATED="1453564957119" ID="ID_1656541798" MODIFIED="1453564960843" POSITION="right" TEXT="Statistiques">
+<node CREATED="1453658845557" ID="ID_259451584" MODIFIED="1453658849563" TEXT="Choix de la fiche">
+<node CREATED="1453658858007" ID="ID_543043000" MODIFIED="1453658873360" TEXT="Statistique de la fiche choisie"/>
+</node>
+</node>
 </node>
 </map>
