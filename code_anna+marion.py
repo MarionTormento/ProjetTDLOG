@@ -380,6 +380,8 @@ class Statistiques(QtGui.QWidget):
 		'''Ouvre le graphe dans une autre fenêtre'''
 		self.courbe=pg.plot()
 		self.courbe.addLegend()
+		self.courbe.setLabel('left','Notes (/20)')
+		self.courbe.setLabel('bottom','Questions')
 		self.courbe.plot(self.x,self.y,pen='r', name=self.line_name.currentText())
 		self.close()
 
