@@ -12,23 +12,24 @@ import random
 import numpy as np
 import pyqtgraph as pg 
 
-''' Crée la fiche, la nomme et la prépare'''
+''' Classe qui crée la fiche, la nomme et la prépare'''
 class creer_fiche(QtGui.QWidget):
 
 	def __init__(self):
 		super(creer_fiche, self).__init__()
 		self.f = fch_interro()
 		self.recap = Recap()
-		self.setWindowTitle("Nommer votre fiche de révsion")
+		self.setWindowTitle("Nommez votre fiche de révision")
 		'''Champs pour rentrer le nom'''
 		self.titre_name=QtGui.QLabel("Nom de la fiche")
 		self.line_name=QtGui.QLineEdit(self)
-		'''Champs pour définir les langues de la fiche'''
+		'''Menu déroulant pour définir les langues de la fiche'''
 		self.titre_langue1=QtGui.QLabel("Langue 1 :")
 		self.line_langue1=QtGui.QComboBox(self)
 		self.line_langue1.addItem("Français")
 		self.line_langue1.addItem("Anglais")
 		self.line_langue1.addItem("Espagnol")
+		'''On appelle la fonction menu langue'''
 		self.line_langue1.activated.connect(self.menu_langue)
 		self.titre_langue2=QtGui.QLabel("Langue 2 :")
 		self.line_langue2=QtGui.QComboBox(self)
@@ -46,9 +47,12 @@ class creer_fiche(QtGui.QWidget):
 		posit.addWidget(self.bouton_name,3,0)
 		self.setLayout(posit)
 
+		'''Fonction menu langue : permet de enregistrer la langue 1 choisie et de éliminer cette langue des choix de langue2'''
 	def menu_langue(self):
+		'''On récupère l'indice de la langue 1 choisie'''
 		index_langue = self.line_langue1.currentIndex()
 		self.line_langue2.clear()
+		'''On propose des langues pour la langue 2 en fonction de la langue 1 choisie'''
 		if index_langue == 0:
 			self.line_langue2.addItem("Anglais")
 			self.line_langue2.addItem("Espagnol")
@@ -61,13 +65,13 @@ class creer_fiche(QtGui.QWidget):
 
 
 	def ok_name(self):
-		'''Récupération du nom'''
+		'''Récupération du nom de la fiche'''
 		self.f.name = self.line_name.text()
-		'''Récupération des langues'''
+		'''Récupération des langues de la fiche'''
 		self.f.langue1 = self.line_langue1.currentText()
 		self.f.langue2 = self.line_langue2.currentText()
-		'''Appel du create_file'''
-		self.f.create_file() #Appelle le create_file du code source
+		'''Appel du create_file : on crée une fiche txt'''
+		self.f.create_file()
 		self.recap.add_data(self.f.name, self.f.langue1, self.f.langue2)
 		self.close()
 		self.f.collect_data(self.f.langue1, self.f.langue2)
@@ -75,7 +79,7 @@ class creer_fiche(QtGui.QWidget):
 		self.prepa_fiche = Preparation(self.f)
 		self.prepa_fiche.show()		
 
-
+'''Classe qui lance la préparation'''
 class Preparation(QtGui.QWidget):
 
 	def __init__(self, fch_interro):
@@ -106,10 +110,11 @@ class Preparation(QtGui.QWidget):
 		self.setLayout(posit)
 
 	def ok_m(self):
-		'''Récupération des valeurs'''
+		'''Récupération des mots rentrés par l'utilisateur'''
 		word_lg1 = self.line1.text()
 		word_lg2 = self.line2.text()
 		self.f.collect_data(word_lg1, word_lg2)
+		'''On efface ces mots pour pouvoir rentrer une série suivante'''
 		self.line1.clear()
 		self.line2.clear()
 
@@ -117,7 +122,7 @@ class Preparation(QtGui.QWidget):
 		self.ok_m()
 		self.close()
 
-
+'''Classe permettant de choisir la fiche et les langues de l'évaluation'''
 class choose_fiche(QtGui.QWidget):
 
 	def __init__(self):
@@ -126,11 +131,13 @@ class choose_fiche(QtGui.QWidget):
 		self.r = Recap()
 		self.r.file_to_tableau()
 		self.setWindowTitle("Sur quel thème souhaitez vous être interrogé ?")
-		'''Champs pour rentrer le nom'''
+		'''Champs titre'''
 		self.titre_name=QtGui.QLabel("Nom de la fiche :")
+		'''On demande à l'utilisateur de choisir une fiche parmi celles existantes à l'aide d'un menu déroulant'''
 		self.line_name=QtGui.QComboBox(self)
 		for i in range(self.r.nb_files):
 			self.line_name.addItem(self.r.tableau_name[i])
+		'''On demande à l'utilisateur de choisir le sens de traduction à l'aide de menu déroulant'''
 		self.titre_langue_question=QtGui.QLabel("Traduction de :")
 		self.line_langue_question=QtGui.QComboBox(self)
 		self.titre_langue_reponse=QtGui.QLabel("Vers :")
@@ -156,12 +163,15 @@ class choose_fiche(QtGui.QWidget):
 		self.r.which_langue(index_file)
 		self.line_langue_question.clear()
 		self.line_langue_reponse.clear()
+		'''On propose à l'utilisateur une langue de départ parmi les deux définies dans la fiche'''
 		for i in range(2):
 			self.line_langue_question.addItem(self.r.tableau_langue[i])
+		'''On appelle la fonction choix_langue_question'''
 		self.line_langue_question.activated.connect(self.choix_langue_question)
 		for i in range(2):
 			self.line_langue_reponse.addItem(self.r.tableau_langue[i])
 
+	'''Fonction permettant de définir la langue d'arrivée en éliminant la langue de départ des choix possibles'''
 	def choix_langue_question(self):
 		index_langue = self.line_langue_question.currentIndex()
 		self.line_langue_reponse.clear()	
@@ -176,14 +186,12 @@ class choose_fiche(QtGui.QWidget):
 		self.f.langue_reponse=self.line_langue_question.currentText()
 		'''Ouvre fiche avec nom existant'''
 		self.f.open_file() 
-		#ouvre la fiche avec le nom déjà existant
-		# amélioration: vérification que la fiche existe, sinon on dit fuck => leven?, proposition des fiches qui existe déjà
 		self.close()
 		'''Lancement de l'Evaluation'''		
 		self.evaluation_fiche = Evaluation(self.f)
 		self.evaluation_fiche.show()	
 
-
+'''Classe qui lance l'évaluation'''
 class Evaluation(QtGui.QWidget):
 
 	def __init__(self, fiche):
@@ -222,26 +230,35 @@ class Evaluation(QtGui.QWidget):
 		self.reinit()
 
 	def reinit(self):
+		'''Permet de proposer une question aléatoire à l'utilisateur'''
 		self.question.setText(self.f.to_guess[self.index_question])
 		self.reponse.setText("")
 				
 	def mot_suivant(self):
+		'''On enregistre la réponse de l'utilisateur'''
 		user_answer = self.reponse.text()
+		'''On calcule la distance de levenshtein entre la réponse utilisateur et la réponse attendue'''
 		distance = distance_levenshtein(self.f.answer[self.index_question], user_answer)
+		'''Choix des critères d'évaluation'''
+		'''Distance de zéro, l'utilisateur a un point'''
 		if distance == 0:
 			self.f.score += 1
+		'''Distance de un, l'utilisateur a un demi point'''
 		if distance == 1:
 			self.f.score += 0.5
 			self.erreur_to_guess.append(self.f.to_guess[self.index_question]) 
 			self.erreur_answer.append(self.f.answer[self.index_question])
 			self.erreur_user_answer.append(user_answer)
+		'''Distance supérieure à un, l'utilisateur a zéro'''
 		if distance > 1:
 			self.erreur_to_guess.append(self.f.to_guess[self.index_question]) 
 			self.erreur_answer.append(self.f.answer[self.index_question])
 			self.erreur_user_answer.append(user_answer)
 		self.index_question += 1
+		'''Evaluation terminée quand on arrive à la fin des questions'''
 		if self.index_question == self.f.nb_words - 1:
 			self.bouton.setText("Evaluation Terminée")
+		'''On enregistre le score final et on lance la fenêtre préparation terminée'''
 		if self.index_question >= self.f.nb_words:
 			self.note = str(self.f.score) + "/" + str(self.f.nb_words)
 			self.r.write_score(self.f.name, self.note)
@@ -251,12 +268,12 @@ class Evaluation(QtGui.QWidget):
 		else:
 			self.reinit()
 
-
+'''Classe qui permet d'afficher le score et la correction à l'issue de l'évaluation'''
 class PartieTermin(QtGui.QWidget):
 	
 	def __init__(self, a_traduire, reponse_juste, reponse_user ,note):
 		super(PartieTermin,self).__init__()
-		'''On prend le tableau récap des erreurs'''
+		'''On prend le tableau récapitulatif des erreurs'''
 		self.to_guess = a_traduire
 		self.answer = reponse_juste
 		self.user_answer = reponse_user
@@ -270,6 +287,7 @@ class PartieTermin(QtGui.QWidget):
 		if index == 0:
 			self.annonce_erreur = QtGui.QLabel("Vous n'avez fait aucune erreur, bravo!")
 		else: 
+			'''On précise à l'utilisateur ses erreurs et la réponse attendue'''
 			self.annonce_erreur = QtGui.QLabel("Vos erreurs sont les suivantes")
 			self.question = QtGui.QLabel("Question")
 			self.reponse = QtGui.QLabel("Réponse Attendue")
@@ -296,7 +314,7 @@ class PartieTermin(QtGui.QWidget):
 				posit.addWidget(self.affiche_user_reponse[i], 4+i, 2)
 		self.setLayout(posit)
 
-
+'''Fenêtre principale du logiciel'''
 class InterfaceGraphique(QtGui.QMainWindow):
 	
 	def __init__(self):
@@ -307,15 +325,18 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		'''Bouton préparation'''
 		self.boutonPreparation=QtGui.QPushButton("Préparation",self)#création de l'onglet de préparation
 		self.boutonPreparation.move(20,20)
+		self.boutonPreparation.setStyleSheet("background-color:green")
 		self.boutonPreparation.clicked.connect(self.preparer)#appel de la fonction si on clique sur l'onglet
 		'''Bouton évaluation'''
 		self.boutonEvaluation=QtGui.QPushButton("Evaluation",self)#création de l'onglet d'évaluation
 		self.boutonEvaluation.move(150,20)
+		self.boutonEvaluation.setStyleSheet("background-color:red")
 		self.boutonEvaluation.clicked.connect(self.evaluer)#appel de la fonction si on clique sur cet onglet
 		'''Bouton Statistiques'''
 		self.boutonStat=QtGui.QPushButton("Tes statistiques",self)
 		self.boutonStat.clicked.connect(self.statistiques)#appel de la fonction si on clique sur cet onglet
 		self.boutonStat.move(85,50)
+		self.boutonStat.setStyleSheet("background-color:yellow")
 	
 	def preparer(self):
 		os.chdir(self.d.fiche_path)
@@ -333,6 +354,7 @@ class InterfaceGraphique(QtGui.QMainWindow):
 		self.stat = Statistiques()
 		self.stat.show()
 
+'''Classe qui permet d'accéder aux fiches créées'''
 class Directory():
 	def __init__(self):
 		self.current_path = os.getcwd()
@@ -340,7 +362,7 @@ class Directory():
 		if not os.path.exists(self.fiche_path):
 			os.makedirs(self.fiche_path)
 
-
+'''Classe permettant à l'utilisateur d'avoir accès à ses statistiques'''
 class Statistiques(QtGui.QWidget):
 	
 	def __init__(self):
@@ -350,6 +372,7 @@ class Statistiques(QtGui.QWidget):
 		self.setGeometry(300,300,290,150)
 		self.setWindowTitle("Tes statistiques")
 		self.titre_name=QtGui.QLabel("Nom de la fiche :")
+		'''L'utilisateur choisit la fiche sur laquelle il veut avoir accès à ses statistiques'''
 		self.line_name=QtGui.QComboBox(self)
 		for i in range(self.r.nb_files):
 			self.line_name.addItem(self.r.tableau_name[i])
@@ -371,11 +394,12 @@ class Statistiques(QtGui.QWidget):
 		return (note_ramen)
 
 	def menu_score(self):
-		'''Champs pour demander de quelle langue vers quelle langue'''
+		'''On enregistre la fiche sélectionnée par l'utilisateur '''
 		index_file = self.line_name.currentIndex()
 		self.r.recup_score(index_file)
 		'''On définit les axes du plot'''
 		self.x= list(range(1,len(self.r.tableau_score)+1))
+		'''On ramène les notes sur 20'''
 		self.y=self.ramener_note()
 		'''Ouvre le graphe dans une autre fenêtre'''
 		self.courbe=pg.plot()
@@ -386,7 +410,7 @@ class Statistiques(QtGui.QWidget):
 		self.close()
 
 
-
+'''Programme principal'''
 def main():
 	app=QtGui.QApplication(sys.argv)
 	interface=InterfaceGraphique()
