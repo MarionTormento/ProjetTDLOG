@@ -1,7 +1,0 @@
-Pour configurer avec le proxy de la résidence
-git config --global http.proxy http://tormentm:MDP@etuproxy.enpc.fr:3128
-en remplacant tormentm par le-cerfa et MDP par ton mot de passe
-
-Pour s'en sortir avec le commit
-i => INSERT tu peux écrire ton commentaire
-Echap + - + w + q => te sors du commit

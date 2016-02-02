@@ -1,7 +1,0 @@
-Graphiques :
-- Fenêtre à la bonne taille pour voir les titres (pour tout)
-- tracer des graphes par rapport au score => Boutton afficher les statistiques
-
-Technique :
-- checker les doublons
-- se rappeler des erreurs et les annoncer => nouvelle fenetre pour fenetre terminé !
