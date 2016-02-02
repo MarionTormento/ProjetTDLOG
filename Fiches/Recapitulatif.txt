@@ -1,2 +1,4 @@
-animaux:Français:Anglais:2/5:2.5/5:4/5:5/5:
-transport:Français:Anglais:1/5:4/5:5/5:
+animaux:Français:Anglais:2/5:2.5/5:4/5:5/5:2.5/5:0/5:1/5:
+transport:Français:Anglais:1/5:4/5:5/5:5/5:4/5:
+le visage:Anglais:Espagnol:1/1:0.5/1:1/1:0/1:1/1:1/1:
+informatique:Français:Anglais:2/3:

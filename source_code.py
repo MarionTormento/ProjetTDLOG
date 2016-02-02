@@ -1,59 +1,53 @@
-
-# créer un fichier directement dès que les gens dépose leurs informations 
-# choix de la langue d'interrogation
-# distance de Levenshtein
-# ATTENTION PROBLEME DANS READ FILE il ne voit pas la denière ligne
-
 import random
 
-# Fiche de vocabulaire sur un thème unique, choix du titre du fichier, collect data à partir de l'interface graphique
+
+''' Classe créant et lisant le fichier correspondant à une fiche d'interrogation'''
 class fch_interro():
 	def __init__(self):
 		self.nb_words = 0
 		self.name = ""
 		self.langue1 = ""
 		self.langue2 = ""
-		#self.datafiche = ""
 		self.nametxt = ""
-		#self.namedata = ""
 		self.score = 0
-		self.tableau = []
-		self.to_guess = [] #mot à deviner
-		self.answer = [] #réponse correspondante (self.to_guess[i] traduit = self.answer[i])
+		self.tableau = [] 
+		self.to_guess = [] #tableau des question créés lors d'une interrogation
+		self.answer = [] #tableau des réponses correspondantes
 
-	def create_file(self): #crée un fichier .txt qui restera en mémoire à terme
+	''' Créer le fichier en préparation'''
+	def create_file(self):
 		self.nametxt = self.name + ".txt"
-		#self.namedata = "data_" + self.name + ".txt"
-		self.fiche = open(self.nametxt, "a")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
-		self.fiche.close()
-		#self.datafiche = open(self.namedata,"w")
-		#self.datafiche.write(self.langue1 + ":" + self.langue2 + '\n')
-		#self.datafiche.close()
-
-	def open_file(self): #crée un fichier .txt qui restera en mémoire à terme
-		self.nametxt = self.name + ".txt"
-		self.fiche = open(self.nametxt, "r")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
+		self.fiche = open(self.nametxt, "a") 
 		self.fiche.close()
 
-	def collect_data(self, word_lg1, word_lg2): #remplit le fichier la première fois
+	''' Ouvre le fichier en interrogation'''
+	def open_file(self): 
+		self.nametxt = self.name + ".txt"
+		self.fiche = open(self.nametxt, "r") 
+		self.fiche.close()
+
+	'''Inscrit un couple de mot dans la fiche'''
+	def collect_data(self, word_lg1, word_lg2):
 		definition = word_lg1 + ":" + word_lg2 + '\n'
 		self.fiche = open(self.nametxt, "a")
 		self.fiche.write(definition)
 		self.nb_words += 1
 		self.fiche.close()
 
-	def read_file(self): #collecte ligne par ligne une première fois
+	'''Lis le fichier et reporte les lignes dans un tableau'''
+	def read_file(self): 
 		data = open(self.nametxt, "r")
 		self.tableau = data.readlines()
 		self.nb_words = len(self.tableau)
 		data.close()
 
-	def file_to_tableau(self): #convertit le fichier texte en un tableau ou on trouve en indice par les mots langue 1 et en pair les mots langue 2
+	'''Transforme le fichier en un tableau contenant tous les mots dans la langue 1 puis tous les mots dans la langue 2'''
+	def file_to_tableau(self): 
 		self.read_file()
-		self.langue1 = self.tableau[0].split(':', 1)[0] 
+		self.langue1 = self.tableau[0].split(':', 1)[0] #récupère l'information sur les langues de rédaction de la fiche
 		langue_intermediaire = self.tableau[0].split(':', 1)[1] 
 		self.langue2 = langue_intermediaire.split('\n', 1)[0]
-		self.tableau = self.tableau[1:]
+		self.tableau = self.tableau[1:] #extrait du tableau de base ne contenant que les couples de mots et plus les langues
 		self.nb_words -= 1
 		for i in range(self.nb_words):
 			word_lg1 = self.tableau[i].split(':', 1)[0] #mot dans la langue 1
@@ -63,7 +57,8 @@ class fch_interro():
 			self.tableau.append(word_lg2) #(prend la position nb_words+i)
 		self.interrogate()
 
-	def choose_lg(self): #langue 1 renvoie l'indice 0 et langue 2 l'indice 1 du choix langue d'apres
+	'''Récupère de l'interface graphique l'information sur les langues d'interrogation'''
+	def choose_lg(self): 
 		if self.langue1 == self.langue_question:
 			return 0
 		if self.langue2 == self.langue_question:
@@ -71,6 +66,7 @@ class fch_interro():
 		else:
 			print("Vous ne pouvez pas être intérrogé dans cette langue")
 
+	'''créer un tableau de mots pour être intérogé dans un ordre au hasard ainsi que le tableau des réponses correspondantes'''
 	def interrogate(self):
 		couple_interro = [i for i in range(self.nb_words)]
 		idx_language = self.choose_lg()
@@ -80,7 +76,7 @@ class fch_interro():
 			self.answer.append(self.tableau[idx_rdm + (1 - idx_language)*self.nb_words])
 			couple_interro.remove(idx_rdm)
 
-
+''' code pour la distance de levenshtein'''
 def distance_levenshtein(mot1,mot2):
 	len1=len(mot1)
 	len2=len(mot2)
@@ -98,6 +94,8 @@ def distance_levenshtein(mot1,mot2):
 			d[(len2+1)*i+j]=min((d[(len2+1)*(i-1)+j]+1), (d[(len2+1)*i+j-1]+1), (d[(len2+1)*(i-1)+j-1]+cout))
 	return d[(len2+1)*len1+len2]
 
+
+'''Classe créer la fiche récapitulative contenant toutes les informations sur les fiches, les langues, les scores'''
 class Recap():
 	def __init__(self):
 		self.name = "Recapitulatif"
@@ -107,24 +105,28 @@ class Recap():
 		self.tableau_langue = []
 		self.tableau = []
 	
+	'''A la création d'une nouvelle fiche, rajoute le nom et les langues d'écriture'''
 	def add_data(self, nom, langue1, langue2):
-		self.fiche = open(self.nametxt, "a")  # ou "a"? ou créer un conflit si le nom est déjà utilisé 
+		self.fiche = open(self.nametxt, "a") 
 		definition = nom + ":" + langue1 + ":" + langue2 + ":" + '\n'
 		self.fiche.write(definition)
 		self.fiche.close()
 	
-	def read_file(self): #collecte ligne par ligne une première fois
+	'''Lis le fichier récapitulatif et inscrit les lignes dans un tableau'''
+	def read_file(self):
 		data = open(self.nametxt, "r")
 		self.tableau = data.readlines()
 		self.nb_files = len(self.tableau)
 		data.close()
 
-	def file_to_tableau(self): #convertit le fichier texte en un tableau ou on trouve en indice par les mots langue 1 et en pair les mots langue 2
+	'''Collecte les noms des fiches existantes'''
+	def file_to_tableau(self):
 		self.read_file()
 		for i in range(self.nb_files):
-			name = self.tableau[i].split(':', 1)[0] #mot dans la langue 1
-			self.tableau_name.append(name) #(prend la position nb_words+i)
+			name = self.tableau[i].split(':', 1)[0] 
+			self.tableau_name.append(name) 
 
+	'''Pour la fiche choisie (index) récolte les langues possibles d'interrogation'''
 	def which_langue(self, index):
 		self.read_file()
 		self.tableau_langue = []
@@ -134,11 +136,13 @@ class Recap():
 		self.tableau_langue.append(langue1)
 		self.tableau_langue.append(langue2)
 
+	'''Pour la fiche choisie, indique les score déjà réalisés'''
 	def recup_score(self, index):
 		self.read_file()
 		self.tableau_score = self.tableau[index].split(':')
 		self.tableau_score = self.tableau_score[3:len(self.tableau_score)-1]
 
+	'''Rajoute le nouveau score réalisé à la fiche correspondante'''
 	def write_score(self, name, note):
 		data = open(self.nametxt, "r")
 		index_ligne = 0

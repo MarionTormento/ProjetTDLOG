@@ -1,0 +1,4 @@
+Français:Anglais
+ordinateur:computer
+souris:mouse
+écran:screen
